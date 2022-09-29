@@ -2,6 +2,8 @@
 % Version Matlab : R2019a
 % Systeme d'exploitation : Windows 10
 
+
+
 %% Nettoyage de l'espace de travail
 close all;
 clear all;
@@ -12,9 +14,9 @@ video = 'wdesk.avi';
 nbParticules = 500;
 
 
-% Début du programme
+% DÃ©but du programme
 disp('*********************************************************');
-disp('***************** DÉBUT DU PROGRAMME ********************');
+disp('***************** DÃ‰BUT DU PROGRAMME ********************');
 disp('************ Suivi d''objets en mouvement ***************');
 disp('*********************************************************');
 disp(' ');
