@@ -1,22 +1,22 @@
 % Isabelle EYSSERIC
-% Matricule : 17243571
 % Version Matlab : R2019a
-% Systeme d'exploitation : Windows
+% Systeme d'exploitation : Windows 10
+
 
 function suiviFP ( video, nbParticules )
 % Suivre un objet en mouvement avec le filtre de particules
 % function suiviFP( video, nbParticules )
 % ****************************************************************            
 % Auteur: Isabelle EYSSERIC        
-% Paramètres: 
-%   video: nom de la vidéo sous format string 
-%   nbParticules: nombre de particules à utiliser pour le suivi
+% ParamÃ¨tres: 
+%   video: nom de la vidÃ©o sous format string 
+%   nbParticules: nombre de particules Ã  utiliser pour le suivi
 % ****************************************************************
 
     %% CHARGEMENT DU FICHIER
     videoFile   = vision.VideoFileReader(video);
     videoPlayer = vision.VideoPlayer();      % Initialise le lecteur
-    resolution  = videoFile.info.VideoSize;  % Récupère hauteur et largeur
+    resolution  = videoFile.info.VideoSize;  % RÃ©cupÃ¨re hauteur et largeur
 
     % Nombre de trames
     count = 0;
@@ -25,32 +25,32 @@ function suiviFP ( video, nbParticules )
           count = count+1;          % Compte le nombre de trame
     end
     nbFrame = count;
-    release(videoFile);             % Libère
+    release(videoFile);             % LibÃ¨re
 
     
-    %% MODELE D'APPARENCE BASÉ SUR LA COULEUR
-    % Modèle d'apparence par noyau sans connaissance à priori utilisant 
+    %% MODELE D'APPARENCE BASÃ‰ SUR LA COULEUR
+    % ModÃ¨le d'apparence par noyau sans connaissance Ã  priori utilisant 
     % l'histogramme de couleurs 
 
-    % Première trame et fenêtre
+    % PremiÃ¨re trame et fenÃªtre
     videoFile = vision.VideoFileReader('wdesk.avi');
-    objectFrame  = step(videoFile);         % Première trame
+    objectFrame  = step(videoFile);         % PremiÃ¨re trame
     objectHSV    = rgb2hsv(objectFrame);    % Convertit en HSV
     objectRegion = [80,20,75,100];
     
-    % Détermine la région de la fenêtre
+    % DÃ©termine la rÃ©gion de la fenÃªtre
     region = insertShape( objectFrame, ...
                           'rectangle',objectRegion,...
                           'LineWidth',4,'Color','red');
-    figure; imshow(region);title('Cadre de la région cible');
+    figure; imshow(region);title('Cadre de la rÃ©gion cible');
     
     % Suivi avec Histogramme de couleur 
     HBtracker = vision.HistogramBasedTracker;                       
     initializeObject(HBtracker,objectHSV(:,:,1),objectRegion, 64); 
 
     
-    %% MODÈLE DE MOUVEMENT PROBABILISTE
-    % Modèle en mouvement probabiliste utilisant le filtre à particules
+    %% MODÃˆLE DE MOUVEMENT PROBABILISTE
+    % ModÃ¨le en mouvement probabiliste utilisant le filtre Ã  particules
 
     % Parameters des particules
     F_update = [1 0 1 0; 0 1 0 1; 0 0 1 0; 0 0 0 1];
@@ -58,9 +58,9 @@ function suiviFP ( video, nbParticules )
     % En fonction nombre de bin par couleur, de la position entre elles 
     % et du regroupement:
     Xrgb = 50; Xpos = 10; Xvec = 5;
-    Xreg = [255;0;0];   % Couleur de peau à détecter
+    Xreg = [255;0;0];   % Couleur de peau Ã  dÃ©tecter
 
-    % Générer des nombres aléatoires
+    % GÃ©nÃ©rer des nombres alÃ©atoires
     X1 = randi(resolution(2), 1, nbParticules);
     X2 = randi(resolution(1), 1, nbParticules);
     X3 = zeros(2, nbParticules);
@@ -71,14 +71,14 @@ function suiviFP ( video, nbParticules )
     for k = 1:nbFrame
 
         % L'image courante 
-        frame = read(videoFile, k);         % Lit une trame à la fois
+        frame = read(videoFile, k);         % Lit une trame Ã  la fois
         hsv = rgb2hsv(frame);               % Convertit en HSV
         bbox = HBtracker(objectHSV(:,:,1)); % Suivi par histogramme couleur
 
         % Variables communes
         N = size(X, 2); X = F_update * X;
         
-        % Générer un nombre aléatoire
+        % GÃ©nÃ©rer un nombre alÃ©atoire
         X(1:2,:) = X(1:2,:) + Xpos * randn(2, N);
         X(3:4,:) = X(3:4,:) + Xvec * randn(2, N);
         
@@ -102,10 +102,10 @@ function suiviFP ( video, nbParticules )
         % Calcul de la distribution cumulative
         R = cumsum(exp(L - max(L)) / sum(exp(L - max(L)), 2), 2);
         
-        % Générer une nouvelle particule pour celle sélectionée
+        % GÃ©nÃ©rer une nouvelle particule pour celle sÃ©lectionÃ©e
         T = rand(1, size(X, 2));
         
-        % Déterminer le poids de cette nouvelle particule
+        % DÃ©terminer le poids de cette nouvelle particule
         [~, I] = histc(T, R); X = X(:, I + 1);
 
         % Affiche latrame
