@@ -11,3 +11,15 @@ Create a moving object detection and tracking program using MATLAB.
 <br/>
 <br/>
 
+
+## Introduction
+
+<p align='justify'>Mise en œuvre d'un algorithme de suivi d'objets en mouvements selon l'approche de filtres de particules.</p><br/>
+
+<p align='justify'>La modélisation de l'apparence est basée sur la distribution de couleurs, et les déplacements de la cible sont décrits par un modèle de mouvement probabiliste.</p><br/>
+<br/>
+<br/>
+
+
+# Repertoires
+
